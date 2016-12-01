@@ -4,7 +4,7 @@ from pathlib import Path
 from skeleton import Skeleton
 from playlist import Playlist
 
-# Chosse a random skeleton file for a given gesture
+# Choose a random skeleton file for a given gesture
 def choose_random_skeleton(gesture):
     current_dir = Path('.')
     data_dir = current_dir / 'data' / 'clean' / gesture
