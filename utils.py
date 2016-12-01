@@ -12,10 +12,10 @@ class Playlist():
         pls_file.write('[playlist]\n\n')
     
         for i in range(len(self.files)):
-            pls_file.write('File' + str(i+1) + '=' + files[i] + '\n\n')
+            pls_file.write('File' + str(i+1) + '=' + self.files[i] + '\n\n')
     
         # The footer for .pls format
-        pls_file.write('NumberOfEntries=' + str(len(files)) + '\n')
+        pls_file.write('NumberOfEntries=' + str(len(self.files)) + '\n')
         pls_file.write('Version=2')
         pls_file.close()
 

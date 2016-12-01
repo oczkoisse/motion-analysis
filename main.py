@@ -2,7 +2,8 @@ import numpy as np
 import os, random
 from pathlib import Path
 from skeleton import Skeleton
-from playlist import Playlist
+from utils import Playlist
+from dtw import dtw
 
 # Choose a random skeleton file for a given gesture
 def choose_random_skeleton(gesture):
@@ -18,9 +19,6 @@ tot_samples = 3
 x_files = [ choose_random_skeleton('head nod') for i in range(tot_samples) ]
 y_files = [ choose_random_skeleton('arms_move_down(with sound)') for i in range(tot_samples) ]
 
-
-from dtw import dtw
-
 # Generating a similarity matrix from two list of files with equal length
 def gen_sim_matrix(x_files, y_files):
 
@@ -33,11 +31,13 @@ def gen_sim_matrix(x_files, y_files):
     # Populating the similarity matrix with distance outputs from DTW
     for i, file_i in enumerate(combined_files):
         sk_i = Skeleton(file_i)
-        sk_i.load(norm='spine-base')
+        sk_i.load()
+        sk_i.normalize('spine-base')
         
         for j, file_j in enumerate(combined_files):
             sk_j = Skeleton(file_j)
-            sk_j.load(norm='spine-base')
+            sk_j.load()
+            sk_j.normalize('spine-base')
 
             dist, cost, acc, path = dtw(sk_i.data, sk_j.data, dist=lambda a, b: np.linalg.norm(a - b))
             s_matrix[i, j] = dist
