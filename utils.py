@@ -1,5 +1,6 @@
-
+# Class to interact (read, write) playlist files
 class Playlist():
+    # Initialize the paths to files to be written to the playlist file
     def __init__(self, files):
         self.files = files
 
@@ -17,3 +18,6 @@ class Playlist():
         pls_file.write('NumberOfEntries=' + str(len(files)) + '\n')
         pls_file.write('Version=2')
         pls_file.close()
+
+    def read(self, file):
+        pass
