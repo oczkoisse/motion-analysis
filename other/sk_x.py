@@ -1,4 +1,8 @@
 import csv
+
+gestures = ['RA: move, up;', 'RA: move, down;', 'LA: move, up;', 'LA: move, down;', 'body: still;', 'head: rotate;', 'body: rotate;']
+
+import csv
 import operator
 
 with open('Labels.tsv') as labels:
@@ -6,12 +10,12 @@ with open('Labels.tsv') as labels:
     pairs = {}
     last_labels = []
     for row in csvreader:
-        filename = row[2]
+        file = row[2]
         start, end, label = row[8:11]
         label = label.strip(';')
         indi_labels = label.split('; ')
         # If we are at first line, do nothing
-        if filenime == '':
+        if label == 'Label':
             continue
         # If we don't have a label to compare to yet, store it for the next time
         elif not last_labels:
@@ -32,3 +36,5 @@ with open('Labels.tsv') as labels:
     
     for i in sorted_labels_pairs[:50]:
         print(i)
+
+        
