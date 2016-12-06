@@ -22,9 +22,3 @@ class Playlist():
     def read(self, file):
         pass
 
-# Reads the data assuming the root folder in current directory
-def read_data(self, root_folder):
-    current_dir = Path('.')
-    data_dir = current_dir / root_folder
-    # Assume the subfolders are named after gestures
-    
