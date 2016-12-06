@@ -1,50 +1,82 @@
 import csv
-from pathlib import Path
+from pathlib import Path, PureWindowsPath
 
-gestures = ['RA: move, up', 'RA: move, down', 'LA: move, up', 'LA: move, down', 'body: still', 'head: rotate;', 'body: rotate']
+gestures = ['RA: move, up', 'RA: move, down', 'LA: move, up', 'LA: move, down', 'head: rotate;', 'body: rotate', 'body: still']
+
+
+def is_valid_pair(llabel, label):
+    l1 = llabel.strip(';')
+    l1_list = l1.split('; ')
+    l2 = label.strip(';')
+    l2_list = l2.split('; ')
+
+    pair = []
+    for g1 in l1_list:
+        if g1 in gestures:
+            pair.append(g1)
+            break
             
-with open('Labels.tsv') as labels:
-    csvreader = csv.reader(labels, delimiter='\t')
-    # To keep track of a possible pair of gestures
-    last_row = []
-    for row in csvreader:
-        file = row[2]
-        # If we are at first line, do nothing
-        if file == 'File Name':
-            continue
-        start, end, label = row[8:11]
-        label = label.strip(';')
-        # Individual labels, note that there won't be any ;
-        indi_labels = label.split('; ')
+    for g2 in l2_list:
+        if g2 in gestures:
+            pair.append(g2)
+            break
 
-        # If we don't have the last row, then there is no transition to clip, so go to next row
-        if not last_row:
+    if len(pair) == 2:
+        return pair
+    else:
+        return []
+
+def read_master_file(filename):
+    with open(filename) as labels:
+        csvreader = csv.reader(labels, delimiter='\t')
+
+        last_row = []
+        
+        for row in csvreader:
+            path_to_file = row[2]
+
+            if path_to_file == 'File Name':
+                continue
+
+            if not last_row:
+                last_row = row
+                continue
+
+            lstart, lend, llabel = int(last_row[8]), int(last_row[9]), last_row[10]
+            start, end, label = int(row[8]), int(row[9]), row[10]
+                       
+            gpair = is_valid_pair(last_row[10], row[10])
+
+            if not not gpair:
+                if start >= lend:
+                    # Clip the appropriate lines in the corresponding skeleton file
+                    p = PureWindowsPath(path_to_file)
+                    path_to_sk_file = Path('..') / 'z' / p.with_name(p.name.replace('RGB', 'Skeleton', 1).replace('Video', 'Skeleton', 1)).with_suffix('.txt')
+                    new_sk_name = path_to_sk_file.name[:-len(path_to_sk_file.suffix)] + '_clipped_' + str(last_row[8]) + '_' + str(end)
+                    path_to_new_sk_file = path_to_sk_file.with_name(new_sk_name).with_suffix('.tsv')
+                
+                    f = path_to_new_sk_file.open('w')
+
+                    with path_to_sk_file.open('r') as sk:
+                        i=0
+                        for line in sk:
+                            if i < lstart+1:
+
+                                i+=1
+                                continue
+
+                            elif i < lend+1:
+
+                                f.write(line.strip().replace(', ', '\t') + '\t' + gpair[0] + '\n')
+                                i+=1
+                                
+                            elif i < end+1:
+
+                                f.write(line.strip().replace(', ', '\t') + '\t' + gpair[1] + '\n')
+                                i+=1
+                                
+                            else:
+
+                                f.close()
+                                break
             last_row = row
-            continue
-        else:
-            # If we have some valid gesture in current frame, then ok
-            # note that validity is defined as two frames having at least a gesture each from the set of valid gestures
-            valid_pair = False
-            for i in indi_labels:
-                if i in gestures:
-                    valid_pair = True
-                    break
-            # Ensure that the pair is valid and the current frame follows the previous one
-            if valid_pair and start >= last_row[9]: # last_row[9] is the end time in previous row
-                # Clip the appropriate lines in the corresponding skeleton file
-                file_path_components = file.split('\\')
-                path_to_sk_file = Path('..') / 'z' / file_path_components[0] / file_path_components[1] / file_path_components[2][:-4] + '.txt'
-
-                f = open( + '_' + str(start) + '_' + str(end) + '_clipped.txt', 'w')
-                with open(path_to_sk_file) as sk:
-                    i=0
-                    for line in sk:
-                    if i<start:
-                        i+=1
-                        continue
-                    elif i<end:
-                        f.write(line+'\t'+)
-                        i+=1
-                    else:
-                        f.close()
-                        break
