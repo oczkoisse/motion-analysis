@@ -21,4 +21,3 @@ class Playlist():
 
     def read(self, file):
         pass
-
