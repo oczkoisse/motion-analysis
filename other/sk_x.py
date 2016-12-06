@@ -50,6 +50,7 @@ def read_master_file(filename):
             if not not gpair:
                 if start >= lend:
                     # Clip the appropriate lines in the corresponding skeleton file
+                    # Creating filename for the clipped skeleton
                     p = PureWindowsPath(path_to_file)
                     path_to_sk_file = Path('..') / 'z' / p.with_name(p.name.replace('RGB', 'Skeleton', 1).replace('Video', 'Skeleton', 1)).with_suffix('.txt')
                     new_sk_name = path_to_sk_file.name[:-len(path_to_sk_file.suffix)] + '_clipped_' + str(last_row[8]) + '_' + str(end)
@@ -58,8 +59,9 @@ def read_master_file(filename):
                     f = path_to_new_sk_file.open('w')
 
                     with path_to_sk_file.open('r') as sk:
+                        cr = csv.reader(sk)
                         i=0
-                        for line in sk:
+                        for line in cr:
                             if i < lstart+1:
 
                                 i+=1
@@ -67,12 +69,12 @@ def read_master_file(filename):
 
                             elif i < lend+1:
 
-                                f.write(line.strip().replace(', ', '\t') + '\t' + gpair[0] + '\n')
+                                f.write('\t'.join(line) + '\t' + gpair[0] + '\n')
                                 i+=1
                                 
                             elif i < end+1:
 
-                                f.write(line.strip().replace(', ', '\t') + '\t' + gpair[1] + '\n')
+                                f.write('\t'.join(line) + '\t' + gpair[0] + '\n')
                                 i+=1
                                 
                             else:
