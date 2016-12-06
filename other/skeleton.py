@@ -7,6 +7,8 @@ class Skeleton():
         self.filename = filename
 
     # Pulls up torso skeleton data from a general skeleton file
+    # Specifically, the x y z coordinates for the following joints are extracted in this order
+    # Shoulder Base | Shoulder Mid | Neck | Head | Shoulder Left | Elbow Left | Wrist Left | Hand Left | Shoulder Right | Elbow Right | Wrist Right | Hand Right | Spine Shoulder
     def load(self, skipheader=True):
         self.data = np.loadtxt(self.filename, dtype='float', delimiter=',', skiprows=1 if skipheader else 0, usecols=(9, 10, 11, 18, 19, 20, 27, 28, 29, 36, 37, 38, 45, 46, 47, 54, 55, 56, 63, 64, 65, 72, 73, 74, 81, 82, 83, 90, 91, 92, 99, 100, 101, 108, 109, 110, 189, 190, 191))
 
@@ -25,7 +27,13 @@ class Skeleton():
             return
 
     def angularize(self):
-        
+        pass
+
+    # Arranges a frame of skeleton data as extracted by load() into a dictionary object indexed by joint abbreviations: h, n, sb, sm, ss, sl, el, wl, hl, sr, er, wr, hr  
+    def __arrange_skeleton(index):
+        d = self.data[index]
+        joints = {}
+        pass
 
     def save(self):
         p = Path(self.filename)
