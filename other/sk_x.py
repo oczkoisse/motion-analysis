@@ -1,15 +1,15 @@
 import csv
 from pathlib import Path, PureWindowsPath
 
-gestures = ['RA: move, up', 'RA: move, down', 'LA: move, up', 'LA: move, down', 'head: rotate;', 'body: rotate', 'body: still']
+gestures = ['RA: move, up', 'RA: move, down', 'LA: move, up', 'LA: move, down', 'head: rotate']
+
+#gestures = ['RA: move, up', 'RA: move, down', 'LA: move, up', 'LA: move, down', 'head: rotate', 'body: rotate']
 
 l_to_a = {'RA: move, up': 0,
-                'RA: move, down': 1,
-                'LA: move, up': 2,
-                'LA: move, down': 3,
-                'head: rotate;': 4,
-                'body: rotate': 5,
-                'body: still': 6}
+          'RA: move, down': 1,
+          'LA: move, up': 2,
+          'LA: move, down': 3,
+          'head: rotate': 4}
 
 def is_valid_pair(llabel, label):
     l1 = llabel.strip(';')
