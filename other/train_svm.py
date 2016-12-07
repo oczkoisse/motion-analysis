@@ -21,18 +21,24 @@ clips_test = clips[split_pt:]
 
 X = []
 y = []
-t=0
+
 for c in clips_train:
     s = Skeleton(str(c))
-    s.load(skipheader=False, delimiter='\t', extracols=(232,))
-    
+    s.load(skipheader=False, delimiter='\t', extracols=(232,)) 
     #s.normalize('spine-base')
-
     X += s.data[:,:-1].tolist()
     y += s.data[:,-1].tolist()
 
-svm = LinearSVC()
-svm.fit(X,y)
-print(svm.score(X, y))
-    
-    
+X_test = []
+y_test = []
+
+for c in clips_test:
+    s = Skeleton(str(c))
+    s.load(skipheader=False, delimiter='\t', extracols=(232,))
+    X_test += s.data[:, :-1].tolist()
+    y_test += s.data[:, -1].tolist()
+
+#svm = LinearSVC()
+#svm.fit(X,y)
+#print(svm.score(X, y))
+
