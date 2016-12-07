@@ -11,7 +11,7 @@ with open('Labels.tsv') as labels:
         label = label.strip(';')
         indi_labels = label.split('; ')
         # If we are at first line, do nothing
-        if filenime == '':
+        if filename == 'File Name':
             continue
         # If we don't have a label to compare to yet, store it for the next time
         elif not last_labels:
