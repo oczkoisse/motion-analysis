@@ -4,17 +4,19 @@ import fnmatch
 from skeleton import Skeleton
 import numpy as np
 from sklearn.svm import LinearSVC
-from sklearn.linear_model.LogisticRegression
-
-data_dir = Path('..') / 'z'
-clips = []
-
-# Store Path objects pointing to clipped skeletons
-for root, dirs, files in os.walk(str(data_dir)):
-    clips += [ Path(root) / f for f in fnmatch.filter(files, '*clipped*tsv') ]
+from sklearn.linear_model import LogisticRegression
 
 
-def train_test_split_clips(clips, ratio):
+
+def train_test_split_clips(ratio):
+    data_dir = Path('..') / 'z'
+    clips = []
+
+    # Store Path objects pointing to clipped skeletons
+    for root, dirs, files in os.walk(str(data_dir)):
+        clips += [ Path(root) / f for f in fnmatch.filter(files, '*clipped*tsv') ]
+
+
     # Random split into training and test data
     np.random.shuffle(clips)
     split_pt = int(ratio * len(clips))

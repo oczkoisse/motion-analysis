@@ -30,8 +30,29 @@ class Skeleton():
 
     # Changes ordinary skeleton representation into vector angles instead
     def angularize(self):
-        pass
+        m, n = self.data.shape
 
+        n -= len(self.extracols)
+
+        extras = self.data[:, -len(self.extracols):]
+        assert n%3 == 0
+
+        new_data = []
+        for i in range(m):
+            angular = []
+            for j in range(0, n-3, 3):
+                for k in range(j+3, n, 3):
+                    angular += [ self.data[i][j] - self.data[i][k] ]
+                    angular += [ self.data[i][j+1] - self.data[i][k+1] ]
+                    angular += [ self.data[i][j+2] - self.data[i][k+2] ]
+
+                    norm = np.linalg.norm([ angular[-3], angular[-2], angular[-1] ])
+                    angular[-1] /= norm
+                    angular[-2] /= norm
+                    angular[-3] /= norm
+                    
+            new_data += [ np.append(np.array(angular), extras[i]) ]
+        self.data = np.array(new_data)
     
     def save(self):
         p = Path(self.filename)
