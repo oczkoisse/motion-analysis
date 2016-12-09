@@ -3,10 +3,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 from sklearn.metrics import confusion_matrix
-
-y_pred = classifier.fit(X_train, y_train).predict(X_test)
-
-
+class_names = ['RA: move, up', 'RA: move, down', 'LA: move, up', 'LA: move, down', 'head: nod']
 def plot_confusion_matrix(cm, classes,
                           normalize=False,
                           title='Confusion matrix',
@@ -32,7 +29,7 @@ def plot_confusion_matrix(cm, classes,
 
     thresh = cm.max() / 2.
     for i, j in itertools.product(range(cm.shape[0]), range(cm.shape[1])):
-        plt.text(j, i, cm[i, j],
+        plt.text(j, i, np.round(cm[i, j], 2),
                  horizontalalignment="center",
                  color="white" if cm[i, j] > thresh else "black")
 
@@ -40,8 +37,12 @@ def plot_confusion_matrix(cm, classes,
     plt.ylabel('True label')
     plt.xlabel('Predicted label')
 
+cnf_matrix = np.array([[2525, 2122,  350,  258 , 137],
+                       [2109, 2754,  278,  346,   95],
+                       [ 624 , 618,  744 , 774,  103],
+                       [ 829,  770,  645 ,1092,  153],
+                       [ 424,  832,  136 , 217,  181]])
 # Compute confusion matrix
-cnf_matrix = 
 np.set_printoptions(precision=2)
 
 # Plot non-normalized confusion matrix
