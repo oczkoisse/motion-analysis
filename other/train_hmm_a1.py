@@ -6,10 +6,13 @@ import numpy as np
 
 from sklearn.linear_model import LogisticRegression
 from sklearn.svm import LinearSVC
+from sklearn.neural_network import MLPClassifier
+
 from HMM3 import HMM
 from sklearn.metrics import accuracy_score, confusion_matrix
 
 from plot_confusion import plot_confusion_matrix
+import matplotlib.pyplot as plt
 
 class_names = ['RA: move, up', 'RA: move, down', 'LA: move, up', 'LA: move, down', 'head: nod']
 
@@ -93,8 +96,8 @@ def flatten(list_of_lists):
 
 def get_results():
 
-    classifiers = [ LinearSVC(), LogisticRegression() ]
-    classifiers_names = ['Linear SVM', 'Logistic Regression']
+    classifiers = [ MLPClassifier(solver='sgd', early_stopping=True), LinearSVC(), LogisticRegression() ]
+    classifiers_names = ['MLP', 'Linear SVM', 'Logistic Regression']
     
     print('Beginning Experiments')
     for n, classifier in enumerate(classifiers):
