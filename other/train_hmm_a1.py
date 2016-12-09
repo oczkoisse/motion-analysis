@@ -9,6 +9,10 @@ from sklearn.svm import LinearSVC
 from HMM3 import HMM
 from sklearn.metrics import accuracy_score, confusion_matrix
 
+from plot_confusion import plot_confusion_matrix
+
+class_names = ['RA: move, up', 'RA: move, down', 'LA: move, up', 'LA: move, down', 'head: nod']
+
 # classifer should be an untrained one, only LinearSVC and LogisticRegression are considered here
 def train_test_split_observations(ratio, classifier):
 
@@ -90,17 +94,22 @@ def flatten(list_of_lists):
 def get_results():
 
     classifiers = [ LinearSVC(), LogisticRegression() ]
-
+    classifiers_names = ['Linear SVM', 'Logistic Regression']
+    
     print('Beginning Experiments')
-    for classifier in classifiers:
+    for n, classifier in enumerate(classifiers):
         X, y, O, X_t, y_t, O_t = train_test_split_observations(0.7, classifier)
         print('Classifier Accuracy on training data:')
         print(classifier.score(flatten(X), flatten(y)))
         print('Classifier Accuracy on test data:')
         print(classifier.score(flatten(X_t), flatten(y_t)))
         print('Confusion Matrix of classifier:')
-        print(confusion_matrix(flatten(y_t), flatten(O_t)))
-        
+        c = confusion_matrix(flatten(y_t), flatten(O_t))
+        print(c)
+        plt.figure()
+
+        plot_confusion_matrix(c, class_names, normalize=True, title=classifiers_names[n])
+
         h = HMM(range(5), range(5))
         h.train(O)
         print('Classifier+HMM Accuracy on training data:')
@@ -108,4 +117,9 @@ def get_results():
         print('Classifier+HMM Accuracy on test data:')
         print(accuracy_score(flatten(y_t), flatten(h.viterbiSequenceList(O_t))))
         print('Confusion Matrix of classifier+HMM:')
-        print(confusion_matrix(flatten(y_t), flatten(h.viterbiSequenceList(O_t))))
+        c = confusion_matrix(flatten(y_t), flatten(h.viterbiSequenceList(O_t)))
+
+        plt.figure()
+        plot_confusion_matrix(c, class_names, normalize=True, title=classifiers_names[n]+' HMM')
+
+        plt.show()
