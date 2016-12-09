@@ -3,7 +3,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 from sklearn.metrics import confusion_matrix
-class_names = ['RA: move, up', 'RA: move, down', 'LA: move, up', 'LA: move, down', 'head: nod']
+
 def plot_confusion_matrix(cm, classes,
                           normalize=False,
                           title='Confusion matrix',
@@ -21,11 +21,11 @@ def plot_confusion_matrix(cm, classes,
 
     if normalize:
         cm = cm.astype('float') / cm.sum(axis=1)[:, np.newaxis]
-        print("Normalized confusion matrix")
-    else:
-        print('Confusion matrix, without normalization')
+        #print("Normalized confusion matrix")
+    #else:
+        #print('Confusion matrix, without normalization')
 
-    print(cm)
+    #print(cm)
 
     thresh = cm.max() / 2.
     for i, j in itertools.product(range(cm.shape[0]), range(cm.shape[1])):
@@ -37,22 +37,16 @@ def plot_confusion_matrix(cm, classes,
     plt.ylabel('True label')
     plt.xlabel('Predicted label')
 
-cnf_matrix = np.array([[2525, 2122,  350,  258 , 137],
-                       [2109, 2754,  278,  346,   95],
-                       [ 624 , 618,  744 , 774,  103],
-                       [ 829,  770,  645 ,1092,  153],
-                       [ 424,  832,  136 , 217,  181]])
-# Compute confusion matrix
-np.set_printoptions(precision=2)
+#np.set_printoptions(precision=2)
 
 # Plot non-normalized confusion matrix
-plt.figure()
-plot_confusion_matrix(cnf_matrix, classes=class_names,
-                      title='Confusion matrix, without normalization')
+#plt.figure()
+#plot_confusion_matrix(cnf_matrix, classes=class_names,
+#                      title='Confusion matrix, without normalization')
 
 # Plot normalized confusion matrix
-plt.figure()
-plot_confusion_matrix(cnf_matrix, classes=class_names, normalize=True,
-                      title='Normalized confusion matrix')
+#plt.figure()
+#plot_confusion_matrix(cnf_matrix, classes=class_names, normalize=True,
+#                      title='Normalized confusion matrix')
 
-plt.show()
+#plt.show()
